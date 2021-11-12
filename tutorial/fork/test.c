@@ -1,12 +1,18 @@
-// orphan process
+/* 
+ * fork and cwd test
+ * 210728
+ */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
+char buf[1024];
+
 int main(int argc, char *argv[])
 {
+	printf("%s %s\n", argv[0], getcwd(buf, 1024));
+
 	pid_t pid;
 
 	pid = fork();
@@ -15,13 +21,10 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "An error occured\n");
 	}
 	else if (pid == 0) {
-		printf("Child Process : %i\n", getppid());
-		sleep(3);
-		printf("Child Process : %i\n", getppid());
+		printf("Child Process : %i\n", getpid());
 	}
 	else {
-		sleep(1);
-		printf("Parent Process : Fork off and die\n");
-		exit(0);
+		wait(NULL);
+		printf("Parent Process : %i\n", pid);
 	}
 }

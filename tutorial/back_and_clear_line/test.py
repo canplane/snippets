@@ -1,3 +1,8 @@
+'''
+bash test - back to previous line, clear line
+211103
+'''
+
 import time
 import sys 
 
