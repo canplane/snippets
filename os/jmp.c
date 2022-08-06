@@ -1,7 +1,10 @@
 /* 
- * setjmp, longjmp
- * 211110
+ * setjmp, longjmp test
+ * ----------------
+ * Sanghoon Lee (canplane@gmail.com)
+ * 2021-11-10
  */
+
 
 #include <stdio.h>
 #include <setjmp.h>

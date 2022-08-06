@@ -1,7 +1,10 @@
 /* 
- * orphan process
- * 210728
+ * orphan process test
+ * ----------------
+ * Sanghoon Lee (canplane@gmail.com)
+ * 2021-07-28
  */
+
 
 #include <stdio.h>
 #include <stdlib.h>

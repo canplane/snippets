@@ -1,7 +1,10 @@
 /* 
- * brk
- * 211105
+ * brk test
+ * ----------------
+ * Sanghoon Lee (canplane@gmail.com)
+ * 5 Nov 2021
  */
+
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,6 +1,8 @@
 '''
 bash test - back to previous line, clear line
-211103
+----------------
+Sanghoon Lee (canplane@gmail.com)
+2021-11-03
 '''
 
 import time

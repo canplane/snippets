@@ -1,3 +1,11 @@
+/* 
+ * Generic queue structure test
+ * ---------------- 
+ * Sanghoon Lee (canplane@gmail.com)
+ * 2021-11-12
+ */
+
+
 #include		<stdio.h>
 #include		"queue.c"
 

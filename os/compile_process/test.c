@@ -1,7 +1,10 @@
 /* 
  * compile process test
- * 210728
+ * ----------------
+ * Sanghoon Lee (canplane@gmail.com)
+ * 2021-07-28
  */
+
 
 int main()
 {

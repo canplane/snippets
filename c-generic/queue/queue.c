@@ -1,10 +1,8 @@
 /* 
- * queue.c
+ * Generic queue structure
  * ----------------
- * Generic Queue Structure
- * 
  * Sanghoon Lee (canplane@gmail.com)
- * 12 November 2021
+ * 2021-11-12
  */
 
 

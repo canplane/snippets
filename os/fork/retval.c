@@ -1,7 +1,10 @@
 /* 
- * fork return
- * 210728
+ * fork return test
+ * ----------------
+ * Sanghoon Lee (canplane@gmail.com)
+ * 2021-07-28
  */
+
 
 #include <stdio.h>
 #include <stdlib.h>

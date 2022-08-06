@@ -1,7 +1,10 @@
 /* 
  * fork and cwd test
- * 210728
+ * ----------------
+ * Sanghoon Lee (canplane@gmail.com)
+ * 2021-07-28
  */
+
 
 #include <stdio.h>
 #include <unistd.h>
