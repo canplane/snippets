@@ -1,5 +1,5 @@
 /* 
- * Generic queue structure test
+ * Generic queue structure - test
  * ---------------- 
  * Sanghoon Lee (canplane@gmail.com)
  * 2021-11-12
