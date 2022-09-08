@@ -17,21 +17,21 @@
 
 #define Y 10
 #define X 10
-#define PLAYERS 10
+#define TILES 10
 
 int map[Y][X];
-int start[PLAYERS][2]; 
+int start[TILES][2]; 
 
 void init() {
-    int p;
+    int tile;
     int y, x, tmp;
-    for (p = 1; p <= PLAYERS; p++) {
+    for (tile = 1; tile <= TILES; tile++) {
         while (TRUE) {
             tmp = rand() % (Y * X);
             y = tmp / X, x = tmp % X;
             if (map[y][x]) continue;
-            map[y][x] = p;
-            start[p][0] = y, start[p][1] = x;
+            map[y][x] = tile;
+            start[tile][0] = y, start[tile][1] = x;
             break;
         }
     }
@@ -44,9 +44,8 @@ void shuffle_array(int arr[], int len) {
         SWAP(arr[i], arr[j]);
     }
 }
-
-void play(int p) {
-    int y = start[p][0], x = start[p][1];
+void expand(int tile) {
+    int y = start[tile][0], x = start[tile][1];
     int y_m = y, y_M = y;
     int x_m = x, x_M = x;
 
@@ -65,7 +64,7 @@ void play(int p) {
                         break;
                     }
                 if (!b) break;
-                for (y = y_m; y <= y_M; y++)    map[y][x] = p;
+                for (y = y_m; y <= y_M; y++)    map[y][x] = tile;
                 x_M = x;
             }
             break;
@@ -78,7 +77,7 @@ void play(int p) {
                         break;
                     }
                 if (!b) break;
-                for (x = x_m; x <= x_M; x++)    map[y][x] = p;
+                for (x = x_m; x <= x_M; x++)    map[y][x] = tile;
                 y_M = y;
             }
             break;
@@ -91,7 +90,7 @@ void play(int p) {
                         break;
                     }
                 if (!b) break;
-                for (y = y_m; y <= y_M; y++)    map[y][x] = p;
+                for (y = y_m; y <= y_M; y++)    map[y][x] = tile;
                 x_m = x;
             }
             break;
@@ -104,7 +103,7 @@ void play(int p) {
                         break;
                     }
                 if (!b) break;
-                for (x = x_m; x <= x_M; x++)    map[y][x] = p;
+                for (x = x_m; x <= x_M; x++)    map[y][x] = tile;
                 y_m = y;
             }
             break;
@@ -127,6 +126,8 @@ int main() {
     
     init();
     //print();
-    for (int p = 1; p <= PLAYERS; p++)  play(p);
+
+    int tile;
+    for (tile = 1; tile <= TILES; tile++)  expand(tile);
     print();
 }
