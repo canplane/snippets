@@ -1,12 +1,3 @@
-/* 
- * Sanghoon Lee (canplane@gmail.com)
- * 2020-02-12
- */
-
-
-/* 임시 변수 없는 swap. 같은 값이라도 오류가 일어나지 않음. 비트 연산이므로 정수형에서만 적용 가능 */
-#define SWAP(x, y) ((y) = (x)^(y), (x) = (x)^(y), (y) = (x)^(y))
-
 /* MSB가 1일 때(음수) >> 연산은 CPU에 따라 음수 유지를 할 수 있다. (내 맥은 음수 유지)
  * 최댓값 구할 때는 (0xFFFFFFFF >> 1) + 1 하거나
  * 혹은 아래의 함수를 쓴다.
@@ -25,6 +16,8 @@
     printf("z = %X\n", z);  // 0xFFFFFFFF
     printf("z = %X\n", z >> 1); // 0xFFFFFFFF
 }
+
+
 // 리틀 엔디언 기준
 void minval(void *p, size_t len)
 {
@@ -33,6 +26,7 @@ void minval(void *p, size_t len)
         ((char *)p)[i] = 0x0;
     ((char *)p)[len - 1] = 0x80;    // 빅 엔디언이면 ((char *)p)[0]
 }
+
 void maxval(void *p, size_t len)
 {
     int i;

@@ -61,3 +61,26 @@ void nth_element(T *l, T *nth, T *r) {					// [l, r)
 	if (nth < i)	nth_element(l, nth, i);
 	else			nth_element(j + 1, nth, r);
 }
+
+
+
+
+/** ver 2 : 조건문 2N번 (위의 것은 N번) -> 더 느림 */
+/* LL ptrs */
+/*
+void sort(T *l, T *r) {
+	T t;
+	if (l == r)		return;
+
+	T *pi = l + rand() % (r - l);
+	SWAP(*pi, *l, t);
+ 
+	T *i = l, *j;
+	for (j = l + 1; j < r; j++) {
+		if (*j <= *l)	++i, SWAP(*j, *i, t);
+	}
+	SWAP(*l, *i, t);
+
+	sort(l, i);
+	sort(i + 1, r);
+}*/
