@@ -12,25 +12,22 @@
 #include		"dict.c"
 
 #define			sort(begin, end, cmp)					qsort((begin), (end) - (begin), sizeof(*(begin)), (cmp))
-
 int static _cmp(const void *a, const void *b) { return strcmp(DictItem__key(*(DictItem **)a), DictItem__key(*(DictItem **)b)); }
 
-char strbuf[101];
+char s[101];
 
 int main()
 {
 	int N;
 	scanf("%d", &N);
 
-	int _initial = 0;
-
 	Dict *d = new__Dict();
 	while (N--) {
-		scanf("%s", strbuf);
-		char *key = strstr(strbuf, ".") + 1;
+		scanf("%s", s);
+		char *key = strstr(s, ".") + 1;		// find
 		int *val = Dict__get(d, key, int *);
 		if (!val)
-			val = Dict__add(d, key, int *), *val = 0;
+			*(val = Dict__add(d, key, int *)) = 0;
 		*val += 1;
 	}
 
