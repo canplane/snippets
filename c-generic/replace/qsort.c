@@ -6,6 +6,19 @@
  */
 
 
+/*
+
+	#define			T										char *
+	T A[1001];
+	int _cmp(const void *a, const void *b) { return strcmp(*(T *)a, *(T *)b); }
+	qsort(A, n, sizeof(*A), _cmp);
+
+
+	#define			sort(begin, end, cmp)					qsort((begin), (end) - (begin), sizeof(*(begin)), (cmp))
+
+ */
+
+
 #include		<stdlib.h>
 #include		<time.h>
 
@@ -48,15 +61,3 @@ void nth_element(T *l, T *nth, T *r) {					// [l, r)
 	if (nth < i)	nth_element(l, nth, i);
 	else			nth_element(j + 1, nth, r);
 }
-
-
-
-
-/*
-
-#define			T										char *
-T A[1001];
-int _cmp(const void *a, const void *b) { return strcmp(*(T *)a, *(T *)b); }
-qsort(A, n, sizeof(*A), _cmp);
-
-*/
