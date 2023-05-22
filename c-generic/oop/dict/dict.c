@@ -14,18 +14,18 @@
 
 #include		<stdlib.h>
 #include		<string.h>
-#include		"list.c"
+#include		"../list/list.c"
 
 
 
 
 #define			__DICT__LISTS_SZ 						47
 
-typedef struct DictItem { char *key; void *val; } DictItem;
+typedef struct DictItem { char *key; void * val; } DictItem;
 typedef struct Dict { List *lists[__DICT__LISTS_SZ]; int size; } Dict;
 
 #define			DictItem__key(item)						((item)->key)
-#define			DictItem__val(item, T)					(*(T *)((item)->val))
+#define			DictItem__val(item, T)					((T)((item)->val))
 
 
 
@@ -49,7 +49,7 @@ int __Dict__key_to_idx(char *s)
 	return ret % __DICT__LISTS_SZ;
 }
 
-#define Dict__get(d, key, T) (*(T *)__Dict__get(d, key, sizeof(T)))
+#define			Dict__get(d, key, T)					((T)__Dict__get((d), (key), sizeof(T)))
 void *__Dict__get(Dict *d, char *key, int T_sz)
 {
 	int idx = __Dict__key_to_idx(key);
@@ -57,16 +57,24 @@ void *__Dict__get(Dict *d, char *key, int T_sz)
 	List *li = d->lists[idx];
 	ListNode *node;
 	DictItem *item;
-	for (node = li->head; node; node = node->next)
-		if (!strcmp(key, (item = node->item)->key))		break;
-	if (!node) {
-		d->size++;
-		item = malloc(sizeof(DictItem));
-		item->key = strdup(key);
-		item->val = malloc(T_sz), memset(item->val, 0, T_sz);
-		List__push(li, item);
-	}
+	for (node = li->head; node != li->tail; node = node->next)
+		if (!strcmp(key, (item = ListNode__item(node, DictItem *))->key))		break;
+	if (node == li->tail)	return NULL;
+	return item->val;
+}
 
+#define			Dict__add(d, key, T)					((T)__Dict__add((d), (key), sizeof(T)))
+void *__Dict__add(Dict *d, char *key, int T_sz)
+{
+	int idx = __Dict__key_to_idx(key);
+
+	d->size++;
+	DictItem *item = malloc(sizeof(DictItem));
+	item->key = strdup(key);
+	item->val = malloc(T_sz), memset(item->val, 0, T_sz);
+
+	List *li = d->lists[idx];
+	ListNode *node = List__insert(li, li->tail, item);
 	return item->val;
 }
 
@@ -74,9 +82,11 @@ DictItem **Dict__items(Dict *d)
 {
 	DictItem **arr = malloc(d->size * sizeof(void *)), **p;
 	p = arr;
-	for (int i = 0; i < __DICT__LISTS_SZ; i++)
-		for (ListNode *node = d->lists[i]->head; node; node = node->next)
-			*p++ = (DictItem *)node->item;
+	for (int i = 0; i < __DICT__LISTS_SZ; i++) {
+		List *li = d->lists[i];
+		for (ListNode *node = li->head; node != li->tail; node = node->next)
+			*p++ = ListNode__item(node, DictItem *);
+	}
 	return arr;
 }
 

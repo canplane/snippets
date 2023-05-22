@@ -13,11 +13,7 @@
 
 #define			sort(begin, end, cmp)					qsort((begin), (end) - (begin), sizeof(*(begin)), (cmp))
 
-int static __cmp(const void *_a, const void *_b)
-{
-	DictItem *a = *((DictItem **)_a), *b = *((DictItem **)_b);
-	return strcmp(DictItem__key(a), DictItem__key(b));
-}
+int static _cmp(const void *a, const void *b) { return strcmp(DictItem__key(*(DictItem **)a), DictItem__key(*(DictItem **)b)); }
 
 char strbuf[101];
 
@@ -26,17 +22,22 @@ int main()
 	int N;
 	scanf("%d", &N);
 
+	int _initial = 0;
+
 	Dict *d = new__Dict();
 	while (N--) {
 		scanf("%s", strbuf);
 		char *key = strstr(strbuf, ".") + 1;
-		Dict__get(d, key, int) += 1;
+		int *val = Dict__get(d, key, int *);
+		if (!val)
+			val = Dict__add(d, key, int *), *val = 0;
+		*val += 1;
 	}
 
 	DictItem **items = Dict__items(d);
-	sort(items, items + d->size, __cmp);
+	sort(items, items + d->size, _cmp);
 	for (int i = 0; i < d->size; i++) {
 		const DictItem *item = items[i];
-		printf("%s %d\n", DictItem__key(item), DictItem__val(item, int));
+		printf("%s %d\n", DictItem__key(item), *DictItem__val(item, int *));
 	}
 }
