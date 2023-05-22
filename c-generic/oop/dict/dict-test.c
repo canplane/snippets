@@ -2,7 +2,7 @@
  * Generic dictionary structure - test (BOJ 20291)
  * ----------------
  * Sanghoon Lee (canplane@gmail.com)
- * 2023-05-11
+ * 2023-05-22
  */
 
 

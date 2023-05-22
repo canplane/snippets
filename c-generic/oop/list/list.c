@@ -2,7 +2,7 @@
  * Generic list structure (doubly linked)
  * ----------------
  * Sanghoon Lee (canplane@gmail.com)
- * 2023-05-23
+ * 2023-05-22
  */
 
 
@@ -18,7 +18,7 @@
 
 
 typedef struct ListNode { void *item; struct ListNode *prev, *next; } ListNode;
-typedef struct List { int size; ListNode *head, *tail; } List;
+typedef struct List { int size; ListNode *begin, *end; } List;
 
 #define			ListNode__item(node, T)					((T)((node)->item))
 
@@ -42,19 +42,19 @@ List *new__List()
 	
 	List *li = malloc(sizeof(List));
 	li->size = 0;
-	li->head = li->tail = node;
+	li->begin = li->end = node;
 
 	return li;
 }
 void delete__List(List *li, int _free_item)
 {
 	ListNode *node, *tmp;
-	for (node = li->head; node != li->tail; node = tmp) {
+	for (node = li->begin; node != li->end; node = tmp) {
 		tmp = node->next;
 		if (_free_item)		free(node->item);
 		free(node);
 	}
-	free(li->tail);
+	free(li->end);
 	free(li);
 }
 
@@ -72,13 +72,13 @@ ListNode *__List__insert(List *li, ListNode *next, void *item)
 	if (prev)
 		prev->next = node;
 	else
-		li->head = node;
+		li->begin = node;
 	next->prev = node;
 	return node;
 }
 ListNode *List__erase(List *li, ListNode *node, int _free_item)
 {
-	if (node == li->tail) {
+	if (node == li->end) {
 		fprintf(stderr, "Error: list index out of range\n");
 		exit(1);
 	}
@@ -92,7 +92,7 @@ ListNode *List__erase(List *li, ListNode *node, int _free_item)
 	if (prev)
 		prev->next = next;
 	else
-		li->head = next;
+		li->begin = next;
 	next->prev = prev;
 	return next;
 }

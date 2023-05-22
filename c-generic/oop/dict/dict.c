@@ -2,7 +2,7 @@
  * Generic dictionary structure
  * ----------------
  * Sanghoon Lee (canplane@gmail.com)
- * 2023-05-11
+ * 2023-05-22
  */
 
 
@@ -57,9 +57,9 @@ void *__Dict__get(Dict *d, char *key, int T_sz)
 	List *li = d->lists[idx];
 	ListNode *node;
 	DictItem *item;
-	for (node = li->head; node != li->tail; node = node->next)
+	for (node = li->begin; node != li->end; node = node->next)
 		if (!strcmp(key, (item = ListNode__item(node, DictItem *))->key))		break;
-	if (node == li->tail)	return NULL;
+	if (node == li->end)	return NULL;
 	return item->val;
 }
 
@@ -74,7 +74,7 @@ void *__Dict__add(Dict *d, char *key, int T_sz)
 	item->val = malloc(T_sz), memset(item->val, 0, T_sz);
 
 	List *li = d->lists[idx];
-	ListNode *node = List__insert(li, li->tail, item);
+	ListNode *node = List__insert(li, li->end, item);
 	return item->val;
 }
 
@@ -84,7 +84,7 @@ DictItem **Dict__items(Dict *d)
 	p = arr;
 	for (int i = 0; i < __DICT__LISTS_SZ; i++) {
 		List *li = d->lists[i];
-		for (ListNode *node = li->head; node != li->tail; node = node->next)
+		for (ListNode *node = li->begin; node != li->end; node = node->next)
 			*p++ = ListNode__item(node, DictItem *);
 	}
 	return arr;

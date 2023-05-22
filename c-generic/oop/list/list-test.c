@@ -2,7 +2,7 @@
  * Generic list structure (doubly linked) - test (BOJ 1406)
  * ----------------
  * Sanghoon Lee (canplane@gmail.com)
- * 2023-05-23
+ * 2023-05-22
  */
 
 
@@ -23,13 +23,13 @@ int main()
 	
 	scanf("%s", s);
 	for (i = 0; s[i]; i++) {
-		List__insert(li, li->tail, new__Char(s[i]));
+		List__insert(li, li->end, new__Char(s[i]));
 	}
 
 	int N;
 	scanf("%d", &N);
 
-	ListNode *it = li->tail;
+	ListNode *it = li->end;
 	while (N--) {
 		scanf("%s", s);
 		switch (s[0]) {
@@ -38,18 +38,18 @@ int main()
 			List__insert(li, it, new__Char(s[0]));
 			break;
 		case 'L':
-			if (it != li->head)		it = it->prev;
+			if (it != li->begin)		it = it->prev;
 			break;
 		case 'D':
-			if (it != li->tail)		it = it->next;
+			if (it != li->end)		it = it->next;
 			break;
 		case 'B':
-			if (it != li->head)		it = List__erase(li, it->prev, 1);
+			if (it != li->begin)		it = List__erase(li, it->prev, 1);
 			break;
 		}
 	}
 
-	for (it = li->head; it != li->tail; it = it->next)
+	for (it = li->begin; it != li->end; it = it->next)
 		printf("%c", *ListNode__item(it, char *));
 	
 	delete__List(li, 1);
