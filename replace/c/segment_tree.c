@@ -51,17 +51,17 @@ int main()
 	int N, K;
 	scanf("%d %d", &N, &K);
 
-	seg_init(1, N + 1, 1);
-	for (int key = 1; key < N + 1; key++)
+	seg_init(1, 1 + N, 1);
+	for (int key = 1; key < 1 + N; key++)
 		printf("%d(%d), ", seg_idx[key], seg_query(1, N + 1, 1, key));
 	printf("\n\n");
 	int sum = seg[1], key;
 	
-	key = seg_inv_query(1, N + 1, 1, sum = 1 + ((sum + K) - 1) % seg[1]);
+	key = seg_inv_query(1, 1 + N, 1, sum = 1 + ((sum + K) - 1) % seg[1]);
 	printf("<%d", key);
 	seg_update(seg_idx[key]), sum--;
 	while (seg[1] > 0) {
-		key = seg_inv_query(1, N + 1, 1, sum = 1 + ((sum + K) - 1) % seg[1]);
+		key = seg_inv_query(1, 1 + N, 1, sum = 1 + ((sum + K) - 1) % seg[1]);
 		seg_update(seg_idx[key]), sum--;
 		printf(", %d", key);
 	}
