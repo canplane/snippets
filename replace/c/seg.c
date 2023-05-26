@@ -12,16 +12,18 @@ int seg_init(int l, int r, int i)					// [l, r)
 	int m = (l + r) / 2;
 	return seg[i] = seg_init(l, m, 2 * i) + seg_init(m, r, 2 * i + 1);
 }
-int seg_query(int l, int r, int i, int key)			// key -> sum
+int seg_query(int l, int r, int i, int from, int to)			// key -> sum
 {
-	if (l + 1 == r)
+	if (r <= from || to <= l)
+		return -1;
+	if (from <= l && r <= to)
 		return seg[i];
 
 	int m = (l + r) / 2;
-	if (key < m)
-		return seg_query(l, m, 2 * i, key);
-	else
-		return seg[2 * i] + seg_query(m, r, 2 * i + 1, key);
+	int e1 = seg_query(l, m, 2 * i, from, to), e2 = seg_query(m, r, 2 * i + 1, from, to);
+	if (e1 == -1)	return e2;
+	if (e2 == -1)	return e1;
+	return e1 + e2;
 }
 int seg_inv_query(int l, int r, int i, int sum)		// sum -> key
 {
@@ -53,7 +55,7 @@ int main()
 
 	seg_init(1, 1 + N, 1);
 	for (int key = 1; key < 1 + N; key++)
-		printf("%d(%d), ", seg_idx[key], seg_query(1, N + 1, 1, key));
+		printf("%d(%d), ", seg_idx[key], seg_query(1, N + 1, 1, key, key + 1));
 	printf("\n\n");
 	int sum = seg[1], key;
 	
