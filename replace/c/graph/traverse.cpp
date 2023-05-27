@@ -42,7 +42,38 @@ void dfs_iter(int v)
 		}
 	}
 }
+/* // simulates computer architecture
+void dfs_iter2(int v)
+{
+	deque<int> s;
+	bool call;
+	int ret, i;
 
+	visit[v] = true;
+	{ ( s.push_back(v), s.push_back(0) ); s.push_back(0); call = true; }		// callee context
+	// v, i, ret -> ret
+	while (true) {
+		{ call = false; (ret = s.back(), s.pop_back()); ( (i = s.back(), s.pop_back()), (v = s.back(), s.pop_back()) ); }
+
+		if (i == 0) {
+			printf("%d ", v);
+			ret++;
+		}
+		for (; i < adj[v].size(); i++) {
+			int w = adj[v][i];
+			if (!visit[w]) {
+				visit[w] = true;
+				{ ( s.push_back(v), s.push_back(i + 1) ); }									// caller context
+				{ ( s.push_back(w), s.push_back(0) ); s.push_back(ret); call = true; }		// callee context
+				break;
+			}
+		}
+		if (call)	continue;
+		{ s.push_back(ret); if (s.size() == 1) break; }
+	}
+	{ call = false; (ret = s.back(), s.pop_back()); }
+}
+ */
 void bfs(int v)
 {
 	deque<int> q;
