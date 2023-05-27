@@ -12,11 +12,15 @@ bool visit[MAX_NODES];
 void dfs(int v)
 {
 	visit[v] = true;
+	// PRE
 	printf("%d ", v);
 	for (auto w : adj[v]) {
-		if (!visit[w])
+		if (!visit[w]) {
 			dfs(w);
+			// IN
+		}
 	}
+	// POST
 }
 void dfs_iter(int v)
 {
@@ -26,15 +30,15 @@ void dfs_iter(int v)
 		auto [v, post] = s.back(); s.pop_back();
 		if (!visit[v]) {
 			visit[v] = true;
+			// PRE
+			printf("%d ", v);
 			s.push_back({ v, true });	// push same node again for postorder
 			for (auto w = adj[v].rbegin(); w != adj[v].rend(); w++) {	// reversed iterator
 				s.push_back({ *w, false });
 			}
-			// on entering
-			printf("%d ", v);
 		}
 		else if (post) {
-			// on leaving
+			// POST (+ IN if the child has the context for parent)
 		}
 	}
 }
@@ -45,11 +49,11 @@ void bfs(int v)
 	visit[v] = true, q.push_back(v);
 	while (q.size()) {
 		v = q.front(), q.pop_front();
+		// PRE
+		printf("%d ", v);
 		for (auto w : adj[v]) {
 			if (!visit[w])
 				visit[w] = true, q.push_back(w);
 		}
-		// on entering
-		printf("%d ", v);
 	}
 }
