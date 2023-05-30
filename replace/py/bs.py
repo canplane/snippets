@@ -6,16 +6,16 @@ bisect_right == upper_bound
 
 # naive: bisect가 더 빠름
 # [l, r)
-def find(arr, l, r, k):
+def binary_search(arr, l, r, k):
 	while l < r:
 		m = (l + r) // 2
 		if k == arr[m]:
-			return k
+			return True
 		elif k < arr[m]:
 			r = m
 		else:
 			l = m + 1
-	return -1
+	return False
 def lower_bound(arr, l, r, k):
 	while l < r:
 		m = (l + r) // 2
