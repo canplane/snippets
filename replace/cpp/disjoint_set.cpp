@@ -18,7 +18,7 @@ int dj_find(int x)
 		x = parent[x];
 		parent[t] = r;
 	}
-	return x;
+	return r;
 }
 void dj_union(int x, int y)
 {
