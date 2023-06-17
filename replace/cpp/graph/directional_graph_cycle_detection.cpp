@@ -34,7 +34,7 @@ bool dfs(int v, int d)
 		if (!dep[w]) {
 			is_cycle |= dfs(w, d + 1);
 		}
-		else if (!finish[w] && dep[w] <= dep[v]) {
+		else if (!finish[w]) {
 			is_cycle = true;
 			cycle_dep = min(cycle_dep, dep[w]);
 

@@ -3,11 +3,10 @@ using namespace std;
 #include <queue>
 #include <tuple>
 
-#define INF 0x7fffffff
-
 int N, M;
 int A[100][100];
 
+#define INF 0x7fffffff
 int dist[100][100];
 int dy[] = { -1, 0, 0, 1 };
 int dx[] = { 0, -1, 1, 0 };
