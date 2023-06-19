@@ -6,27 +6,29 @@
 	next_permutation()처럼 오름차순으로 출력해주진 않는다.
 	중복 값 존재할 때도 가지치기 못함.
  */
-int _p[10];
-void permut(int n, int r, int pos)
+int perm[10], n, r;
+void permut(int r_i)
 {
-	if (pos == r) {
-		for (int i = 0; i < r; i++)		printf("%d ", _p[i]);
+	if (r_i == r) {
+		for (int i = 0; i < r; i++)
+			printf("%d ", perm[i]);
 		printf("\n");
 		return;
 	}
 
 	int t;
-	for (int i = pos; i < n; i++) {
-		SWAP(_p[pos], _p[i], t);
-		permut(n, r, pos + 1);
-		SWAP(_p[pos], _p[i], t);
+	for (int i = r_i; i < n; i++) {
+		SWAP(perm[r_i], perm[i], t);
+		permut(r_i + 1);
+		SWAP(perm[r_i], perm[i], t);
 	}
 }
 
 int main()
 {
-	int n = 4, r = 2;
-	for (int i = 0; i < n; i++)		_p[i] = i + 1;
+	n = 4, r = 2;
+	for (int i = 0; i < n; i++)
+		perm[i] = i + 1;
 
-	permut(n, r, 0);
+	permut(0);
 }

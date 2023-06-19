@@ -92,7 +92,7 @@ void inToPost(char dst[], const char *src)
             while (!empty()) {
                 if ((c = top()) == '(')
                     break;
-                switch (c = top()) {
+                switch (c) {
                 case '*':
                 case '/':
                 case '%':
@@ -106,7 +106,7 @@ void inToPost(char dst[], const char *src)
             while (!empty()) {
                 if ((c = top()) == '(')
                     break;
-                switch (c = top()) {
+                switch (c) {
                 case '*':
                 case '/':
                 case '%':
