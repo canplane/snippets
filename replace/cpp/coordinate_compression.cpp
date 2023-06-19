@@ -1,8 +1,8 @@
 using namespace std;
 #include <utility>
 
-// 좌표 압축: { 1, 1, 10, 5, 3 } -> { 0, 1, 4, 3, 2 }
-// 최댓값은 (배열 사이즈 - 1) 보장
+// 좌표 압축: { 1, 1, 10, 5, 3 } -> { 0, 0, 3, 2, 1 }
+// 최댓값 <= (배열 사이즈 - 1) 보장
 template <class T>
 void compress_coord(T arr[], int n)
 {
