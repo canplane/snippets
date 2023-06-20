@@ -13,7 +13,7 @@ void compress_coord(T arr[], int n)
 	sort(p, p + n);
 	int j = 0;
 	for (int i = 0; i < n; i++) {
-		j += (i > 0 && p[i].first != p[i - 1].first);
+		j += (i > 0 && p[i].first != p[i - 1].first);	//
 		arr[p[i].second] = j;
 	}
 }

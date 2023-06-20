@@ -3,27 +3,27 @@ int parent[DJ_SZ];
 
 void dj_init()
 {
-	for (int i = 0; i < DJ_SZ; i++)
-		parent[i] = i;
+	for (int v = 0; v < DJ_SZ; v++) {
+		parent[v] = v;
+	}
 }
-
-int dj_find(int x)
+int dj_find(int v)
 {
-	int r = x;
-	while (parent[r] != r)
+	int r = v;
+	while (parent[r] != r) {
 		r = parent[r];
-	
-	while (parent[x] != x) {
-		int t = x;
-		x = parent[x];
-		parent[t] = r;
+	}
+	int t;
+	while ((t = parent[v]) != v) {
+		parent[v] = r;
+		v = t;
 	}
 	return r;
 }
-void dj_union(int x, int y)
+void dj_union(int u, int v)
 {
-	int rx = dj_find(x), ry = dj_find(y);
-	parent[ry] = x;
+	int ru = dj_find(u), rv = dj_find(v);
+	parent[rv] = ru;
 }
 
 bool is_root[DJ_SZ];
