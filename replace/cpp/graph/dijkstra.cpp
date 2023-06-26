@@ -1,35 +1,50 @@
+// BOJ 1916
+
 using namespace std;
 #include <cstdio>
+#include <vector>
 #include <queue>
-#include <tuple>
+#include <utility>
 
-int N, M;
-int A[100][100];
+int N;
+vector<pair<int, int>> adj[1001];
 
 #define INF 0x7fffffff
-int dist[100][100];
-int dy[] = { -1, 0, 0, 1 };
-int dx[] = { 0, -1, 1, 0 };
-void dijkstra(int vy, int vx)
+int dist[1001];
+void dijkstra(int u)
 {
-	for (int y = 0; y < N; y++) {
-		for (int x = 0; x < M; x++)
-			dist[y][x] = INF;
+	for (int i = 0; i < 1001; i++) {
+		dist[i] = INF;
 	}
 
-	priority_queue<tuple<int, int, int>> pq;
-	dist[0][0] = 0, pq.push({ -dist[0][0], vy, vx });
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+
+	pq.push({ dist[u] = 0, u });
 	while (!pq.empty()) {
-		auto [d, y, x] = pq.top(); pq.pop();
-		d = -d;
-		for (int i = 0; i < 4; i++) {
-			int ny = y + dy[i], nx = x + dx[i];
-			if (!(0 <= ny && ny < N && 0 <= nx && nx < M))
-				continue;
-			if (dist[y][x] + A[ny][nx] < dist[ny][nx]) {
-				dist[ny][nx] = dist[y][x] + A[ny][nx];
-				pq.push({ -dist[ny][nx], ny, nx });
+		auto [d, u] = pq.top(); pq.pop();
+		if (dist[u] < d) {
+			continue;
+		}
+		for (auto [v, w] : adj[u]) {
+			if (dist[u] + w < dist[v]) {
+				pq.push({ dist[v] = dist[u] + w, v });
 			}
 		}
 	}
+}
+
+int main()
+{
+	int M;
+	scanf("%d %d", &N, &M);
+	while (M--) {
+		int u, v, w;
+		scanf("%d %d %d", &u, &v, &w);
+		adj[u].push_back({ v, w });
+	}
+
+	int A, B;
+	scanf("%d %d", &A, &B);
+	dijkstra(A);
+	printf("%d", dist[B]);
 }
