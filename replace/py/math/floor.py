@@ -1,6 +1,7 @@
 # C나 Python이나 int()는 truncate: int(3.2) = 3, int(-3.2) = -3
 # 나눗셈: C는 버림처럼 동작 (나머지는 음수 가능), Python은 내림처럼 동작 (나머지는 음수 아님)
 # Python은 math.round 오류! (round half to even)
+#	int(f"{x:.0f}"), floor(x + 0.5)
 
 def _floor(x: float):	# OR int(x // 1)
 	_x = int(x)
