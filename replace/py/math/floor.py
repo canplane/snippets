@@ -1,4 +1,5 @@
 # C나 Python이나 int()는 truncate: int(3.2) = 3, int(-3.2) = -3
+# 나눗셈: C는 버림처럼 동작 (나머지는 음수 가능), Python은 내림처럼 동작 (나머지는 음수 아님)
 # Python은 math.round 오류! (round half to even)
 
 def _floor(x: float):	# OR int(x // 1)
@@ -22,7 +23,7 @@ def debug():
 debug()
 
 
-# floor(x/y), ceil(x/y): safe on positive numbers
+# floor(x/y), ceil(x/y): if C, only safe on positive numbers
 def _floor_div(x: int, y: int):
 	return x // y
 def _ceil_div(x: int, y: int):
