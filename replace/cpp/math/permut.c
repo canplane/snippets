@@ -24,6 +24,26 @@ void permut(int r_i)
 	}
 }
 
+// 요상하게 이게 더 빠르다. swap이 적어서 그런 듯?
+int _perm[10];
+int visit[10];
+void permut_bt(int r_i)
+{
+	if (r_i == r) {
+		for (int i = 0; i < r; i++)
+			printf("%d ", _perm[i]);
+		printf("\n");
+		return;
+	}
+	for (int i = 0; i < n; i++) {
+		if (!visit[i]) {
+			visit[i] = 1;
+			_perm[r_i] = perm[i], permut(r_i + 1);
+			visit[i] = 0;
+		}
+	}
+}
+
 int main()
 {
 	n = 4, r = 2;
