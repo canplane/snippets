@@ -33,6 +33,32 @@ void dijkstra(int u)
 	}
 }
 
+// baseline
+bool visit[1001];
+void dijkstra_baseline(int u)
+{
+	for (int i = 0; i < 1001; i++) {
+		dist[i] = INF;
+	}
+
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+
+	pq.push({ dist[u] = 0, u });
+	while (!pq.empty()) {
+		auto [d, u] = pq.top(); pq.pop();
+		if (visit[u]) {
+			continue;
+		}
+		visit[u] = true;
+
+		for (auto [v, w] : adj[u]) {
+			if (!visit[v] && dist[u] + w < dist[v]) {
+				pq.push({ dist[v] = dist[u] + w, v });
+			}
+		}
+	}
+}
+
 int main()
 {
 	int M;
