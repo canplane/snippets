@@ -26,8 +26,8 @@ void dijkstra(int u)
 			continue;
 		}
 		for (auto [v, w] : adj[u]) {
-			if (dist[u] + w < dist[v]) {
-				pq.push({ dist[v] = dist[u] + w, v });
+			if (d + w < dist[v]) {
+				pq.push({ dist[v] = d + w, v });
 			}
 		}
 	}
@@ -52,8 +52,8 @@ void dijkstra_baseline(int u)
 		visit[u] = true;
 
 		for (auto [v, w] : adj[u]) {
-			if (!visit[v] && dist[u] + w < dist[v]) {
-				pq.push({ dist[v] = dist[u] + w, v });
+			if (!visit[v] && d + w < dist[v]) {
+				pq.push({ dist[v] = d + w, v });
 			}
 		}
 	}
