@@ -12,8 +12,8 @@ long dist[1001];
 void dijkstra(int start)
 {
 	// init dist
-	for (int i = 0; i < 1001; i++) {
-		dist[i] = INF;
+	for (int v = 1; v <= N; v++) {
+		dist[v] = INF;
 	}
 
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
@@ -33,22 +33,20 @@ void dijkstra(int start)
 
 // baseline
 bool vis[1001];
-void dijkstra_baseline(int u)
+void dijkstra_baseline(int start)
 {
-	for (int i = 0; i < 1001; i++) {
-		dist[i] = INF;
+	for (int v = 1; v <= N; v++) {
+		dist[v] = INF;
 	}
 
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-
-	pq.push({ dist[u] = 0, u });
+	pq.push({ dist[start] = 0, start });
 	while (!pq.empty()) {
 		auto [d, u] = pq.top(); pq.pop();
 		if (vis[u]) {
 			continue;
 		}
 		vis[u] = true;
-
 		for (auto [v, w] : adj[u]) {
 			if (!vis[v] && d + w < dist[v]) {
 				pq.push({ dist[v] = d + w, v });
