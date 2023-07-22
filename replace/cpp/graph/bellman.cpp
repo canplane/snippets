@@ -1,32 +1,32 @@
 using namespace std;
-#include <cstdio>
-#include <vector>
-#include <utility>
+#include <bits/stdc++.h>
 
-int N, M;
+#define INF ((1L << 30) - 1)
+
+int N;
 vector<pair<int, int>> adj[501];
 
-#define INF 0x7fffffff
 long dist[501];
-bool bellman(int v)
+bool bellman(int start)
 {
-	for (int w = 1; w <= N; w++)
-		dist[w] = INF;
-	dist[v] = 0;
+	// init dist
+	for (int v = 1; v <= N; v++) {
+		dist[v] = INF;
+	}
+	dist[start] = 0;
 
 	for (int k = 0; k < N - 1; k++) {
-		for (int v = 1; v <= N; v++) {
-			for (auto [w, c] : adj[v]) {
-				if (dist[v] != INF && dist[v] + c < dist[w]) {
-					dist[w] = dist[v] + c;
-				}
+		for (int u = 1; u <= N; u++) {
+			for (auto [v, cost] : adj[u]) {
+				dist[v] = min(dist[v], dist[u] + cost);
 			}
 		}
 	}
-	// negative cycle detection
-	for (int v = 1; v <= N; v++) {
-		for (auto [w, c] : adj[v]) {
-			if (dist[v] != INF && dist[v] + c < dist[w]) {
+
+	// negative cycle detection (if not exist, dist is valid)
+	for (int u = 1; u <= N; u++) {
+		for (auto [v, cost] : adj[u]) {
+			if (dist[u] + cost < dist[v]) {
 				return false;
 			}
 		}
