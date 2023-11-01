@@ -17,8 +17,8 @@ public class Exec {
     public static int $(String dir, String command) throws IOException, InterruptedException {
         dir = resolvePath(dir);
 
-        // option -i added to read all environment variables in ~/.bashrc
-        ProcessBuilder pb = new ProcessBuilder($SHELL, "-ic", command);
+        // add option -i to read all environment variables in ~/.bashrc
+        ProcessBuilder pb = new ProcessBuilder($SHELL, "-c", command);
         pb.directory(new File(dir));
         pb.inheritIO();
 
