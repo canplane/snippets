@@ -1,0 +1,327 @@
+<!-- 2019-07-12 02:28 복원 -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title> 계산기 </title>
+        <script language="javascript">
+            function Discharge_21(dc)   // [Date -> Date] 21개월 기준 전역일자 산출
+            {
+                var d, discharge;
+
+                if (dc.getMonth() == 5-1 && dc.getDate() > 29)  // month-1
+                    d = (dc.getFullYear()+2 - Math.floor((dc.getFullYear() + 2) / 4) == 0)? 29: 28;
+                else
+                    d = dc.getDate() - 1;
+                
+                discharge = new Date(dc.getFullYear() + 2, (dc.getMonth()-3), d);
+                return discharge;
+            }
+
+            function Discharge_18(dc)   // [Date -> Date] 18개월 기준 전역일자 산출
+            {
+                var d, discharge;
+
+                if (dc.getMonth() == 8-1 && dc.getDate() > 29)  // month-1
+                    d = (dc.getFullYear()+2 - Math.floor((dc.getFullYear()+2) / 4) == 0)? 29: 28;
+                else
+                    d = dc.getDate() - 1;
+                
+                discharge = new Date(dc.getFullYear() + 2, (dc.getMonth()-6), d);
+                return discharge;
+            }
+
+            function Reduce_End(reduce_start, reduce_per)   // [(Date, int) -> Date] 단축 완료일자 산출
+            {
+                var reduce_days, reduce_end;
+
+                for (var i = 0; 1; i++)
+                {
+                    reduce_days = Math.floor(1 + i / reduce_per);   // 첫날부터 1일씩 감소하므로
+                    reduce_end = new Date(reduce_start.getTime() + i*1000*60*60*24);
+
+                    if (Discharge_18(reduce_end).getTime() >= Discharge_21(reduce_end).getTime() - reduce_days*1000*60*60*24)
+                        return reduce_end;  // 21개월 기준 전역일자 - 단축일이 18개월 기준 전역일자와 동일해지는 시점이 단축 완료일자
+                }
+            }
+
+            function Discharge(enlist, reduce_start, reduce_end, reduce_per)    // [(Date, Date, Date, int) -> Date] 단축 전역일자 산출
+            {
+                var diff, reduce_days, discharge_reduce;
+
+                if (enlist.getTime() < reduce_start.getTime())  // 입대일자 < 단축 시행일자(입대 기준)면 21개월 기준 전역일자 적용
+                    return Discharge_21(enlist);
+                else if (reduce_end.getTime() <= enlist.getTime())  // 단축 완료일자(입대 기준)에 입대 시 전역일자 <= 단축 전역일자면 18개월 기준 전역일자 적용
+                    return Discharge_18(enlist);
+                else
+                {
+                    diff = (enlist.getTime() - reduce_start.getTime()) / (1000*60*60*24);   // 입대일자와 단축 시행일자의 차이 일수
+                    reduce_days = Math.floor(1 + diff / reduce_per);    // 첫날부터 1일씩 감소하므로
+                    discharge_reduce = new Date(Discharge_21(enlist).getTime() - reduce_days*1000*60*60*24);    // 단축 전역일자 = 21개월 기준 전역일자 - 단축일 수
+                    return discharge_reduce;
+                }
+            }
+
+            function ParseStr(str, type)    // 예외 발생 시 false 반환
+            {
+                if (type == "date") // [string -> Date] "2015-04-01" -> Date(2015, 3, 1)
+                {
+                    // 형식 예외처리
+                    if (str.length != 10)
+                        return false;
+                    for (var i = 0; i < 10; i++)
+                    {
+                        if (Math.floor(parseInt(str[i]) / 10) != 0)
+                        {
+                            if ((i == 4 || i == 7) && str[i] == '-')
+                                continue;
+                            else 
+                                return false;
+                        }
+                    }
+
+                    var y = parseInt(str.substring(0, 4));
+                    var m = parseInt(str.substring(5, 7));
+                    var d = parseInt(str.substring(8, 10));
+
+                    // 의미 예외처리
+                    if (y > 2100 || y < 1900)   // 년 값 검사 (1900~2100년으로 입력 제한)
+                        return false;
+
+                    if (m > 12 || m < 1)    // 월 값 검사
+                        return false;
+                    
+                    var date_check = new Date(y , (m-1)+1, 0);  // 일 값 검사
+                    if (d > date_check.getDate() || d < 1)
+                        return false;
+
+                    var dc = new Date(y, m-1, d);
+                    return dc;
+                }
+
+                else if (type == "int") // [string -> integer]
+                {
+                    // 형식 예외처리
+                    for (var i = 0; i < str.length; i++)
+                        if (Math.floor(parseInt(str[i]) / 10) != 0)
+                            return false;
+
+                    num = parseInt(str);
+
+                    // 의미 예외처리
+                    if (num > 100 || num < 1)   // 값 검사 (1~100일로 입력 제한)
+                        return false;
+                    return num;
+                }
+            }    
+
+            function DateToStr(dc)  // [Date -> str] Date(2015, 3, 1) -> "2015-04-01"
+            {
+                var y = dc.getFullYear();
+                var m = dc.getMonth() + 1;
+                var d = dc.getDate();
+                return str = y.toString() + "-" + ((m < 10)? ("0" + m.toString()): m.toString()) + "-" + ((d < 10)? ("0" + d.toString()): d.toString());
+            }
+
+            function Compute()  // [Form -> void]
+            {
+                var enlist = ParseStr(frm.enlist.value, "date");    // 입대일자
+                var reduce_start = ParseStr(frm.reduce_start.value, "date");    // 단축 시행일자
+                var reduce_per = ParseStr(frm.reduce_per.value, "int"); // 1일 단축 당 소요 일 수
+
+                if (!enlist == true)
+                {
+                    alert("제대로 입력해 주세요.");
+                    frm.enlist.focus();
+                    return;
+                }
+                else if (!reduce_start == true)
+                {
+                    alert("제대로 입력해 주세요.");
+                    frm.reduce_start.focus();
+                    return;
+                }
+                else if (!reduce_per == true)
+                {
+                    alert("제대로 입력해 주세요.");
+                    frm.reduce_per.focus();
+                    return;
+                }
+
+                var now = new Date();
+                var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                var reduce_end =  Reduce_End(reduce_start, reduce_per); // 단축 완료일자
+
+                var discharge_21 = Discharge_21(enlist);    // 21개월 기준 전역일자
+                var period_21 = (discharge_21.getTime() - enlist.getTime()) / (1000*60*60*24);  // 21개월 기준 총 복무일 수 = 전역일자 - 입대일자
+                var remainder_21 = (discharge_21.getTime() - today.getTime()) / (1000*60*60*24);    // 21개월 기준 남은 복무일 수 = 전역일자 - 현재일자
+                var ratio_21 = (period_21 - remainder_21) / period_21 * 100;    // 진행률 = (총 복무일 수 - 남은 복무일 수) / 총 복무일 수 * 100 (% 단위 기준)
+                if (remainder_21 < 0)   // 예외처리 : 0 <= 남은 복무일 수 <= 총 복무일 수
+                {
+                    remainder_21 = 0;
+                    ratio_21 = 0;
+                    frm.remainder_21.value = "전역";
+                    frm.ratio_21.value = "전역";
+                }
+                else if (remainder_21 > period_21)
+                {
+                    remainder_21 = period_21;
+                    ratio_21 = 100;
+                    frm.remainder_21.value = "미필";
+                    frm.ratio_21.value = "미필";
+                }
+                else
+                {
+                    frm.remainder_21.value = remainder_21.toString();
+                    frm.ratio_21.value = (Math.round(ratio_21 * Math.pow(10, 2)) / Math.pow(10, 2)).toString(); // 소수 셋째 자리에서 반올림
+                }
+
+                var discharge = Discharge(enlist, reduce_start, reduce_end, reduce_per);    // 단축 적용 전역일자
+                var period = (discharge.getTime() - enlist.getTime()) / (1000*60*60*24);
+                var remainder = (discharge.getTime() - today.getTime()) / (1000*60*60*24);
+                var ratio = (period - remainder) / period * 100;    // 진행률 = (총 복무일 수 - 남은 복무일 수) / 총 복무일 수 * 100 (% 단위 기준)
+
+                if (remainder < 0)
+                {
+                    remainder = 0;
+                    ratio = 0;
+                    frm.remainder.value = "전역";
+                    frm.ratio.value = "전역";
+                }
+                else if (remainder > period)
+                {
+                    remainder = period;
+                    ratio = 100;
+                    frm.remainder.value = "미필";
+                    frm.ratio.value = "미필";
+                }
+                else
+                {
+                    frm.remainder.value = remainder.toString();
+                    frm.ratio.value = (Math.round(ratio * Math.pow(10, 2)) / Math.pow(10, 2)).toString();   // 소수 셋째 자리에서 반올림
+                }
+
+                var reduce_days = period_21 - period;   // 단축일 수 =  21개월 기준 총 복무일 수 - 단축 적용 복무일 수
+
+                // html 텍스트 폼에 산출값 표시
+
+                frm.discharge_21.value = DateToStr(discharge_21);
+                frm.period_21.value = period_21.toString();
+
+                if (discharge.getTime() == discharge_21.getTime())
+                {
+                    frm.discharge.value = "해당 없음";
+                    frm.period.value = "해당 없음";
+                    frm.reduce_days.value = "해당 없음";
+
+                    frm.remainder.value = "해당 없음";
+                    frm.ratio.value = "해당 없음";
+                }
+                else
+                {
+                    frm.discharge.value = DateToStr(discharge);
+                    frm.period.value = period.toString();
+                    frm.reduce_days.value = reduce_days.toString();
+                }
+
+                frm.reduce_end.value = DateToStr(reduce_end);
+                
+                return;
+            }
+
+            function Init()
+            {
+                var dc = new Date();
+                frm.enlist.value = DateToStr(dc);
+                frm.reduce_start.value = "2016-10-04";
+                frm.reduce_per.value = "14";
+
+                frm.enlist.focus();
+                return;
+            }
+
+            function hitEnterKey(e)
+            {
+                if (e.keyCode == 13)
+                    Compute();
+                else
+                    return;
+            }
+        </script>
+    </head>
+
+    <body onLoad="Init()" onkeypress="hitEnterKey(event)">
+        <form name="frm">
+            <table border=0 width=100% height=99% style="font:9pt 돋움;">
+                <tr height=10%>
+                    <td align="center" valign="middle" style="font:24pt 나눔고딕; font-weight:bold;"> 육군 병 복무기간 및 단축일 계산기 </td>
+                </tr>
+                <tr height=40%>
+                    <td align="center" valign="middle">
+                        <p align="center" valign="middle" style="font:16pt 나눔고딕; font-weight:bold;"> 입력 테이블 </p>
+                        <table align="center" border=1 cellspacing=0 cellpadding=0 width=602 style="font:9pt 돋움;">
+                            <tr align="center" height=30>
+                                <th width=198> 입대일자 </th>
+                                <td width=198> 단축이 시작되는 입대일자 </th>
+                                <td width=118> n일당 1일 단축 </td>
+                                <td width=78 rowspan=2> <input type="button" value="계산" onclick="Compute()" style="width:78px; height:68px; font:12pt 돋움; font-weight:bold;"> </td>
+                            </tr>
+                            <tr align="center" height=40>
+                                <td> <input type="text" name="enlist" style="text-align:center; background-color:white; border-width:0; width:198px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="reduce_start" style="text-align:center; background-color:white; border-width:0; width:198px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="reduce_per" style="text-align:center; background-color:white; border-width:0; width:118px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                            </tr>
+                        </table>
+                        <br>
+                        ⦁ 날짜는 <b>YYYY-MM-DD</b> 형식에 맞춰 입력
+                    </td>
+                </tr>
+                <tr height=40%>
+                    <td align="center" valign="middle">
+                        <p align="center" valign="middle" style="font:16pt 나눔고딕; font-weight:bold;"> 출력 테이블 </p>
+                        <table align="center" border=1 cellspacing=0 cellpadding=0 width=602 style="font:9pt 돋움;">
+                            <tr align="center" height=30>
+                                <td width=38> </td>
+                                <td width=138> 전역일자 </td>
+                                <td width=118> 총 복무기간 (일) </td>
+                                <td width=118> 남은 복무기간 (일) </td>
+                                <td width=88> 진행률 (%) </td>
+                                <td width=88> 단축기간 (일) </td>
+                            </tr>
+                            <tr align="center" height=40>
+                                <td> 기존 </td>
+                                <td> <input type="text" name="discharge_21" style="text-align:center; background-color:white; border-width:0; width:138px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="period_21" style="text-align:center; background-color:white; border-width:0; width:118px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="remainder_21" style="text-align:center; background-color:white; border-width:0; width:118px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="ratio_21" style="text-align:center; background-color:white; border-width:0; width:88px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td rowspan=2> <input type="text" name="reduce_days" style="text-align:center; background-color:white; border-width:0; width:88px; height:78px; font:12pt 돋움; font-weight:bold;"> </td>
+                            </tr>
+                            <tr align="center" height=40>
+                                <td> 단축 </td>
+                                <td> <input type="text" name="discharge" style="text-align:center; background-color:white; border-width:0; width:138px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="period" style="text-align:center; background-color:white; border-width:0; width:118px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="remainder" style="text-align:center; background-color:white; border-width:0; width:118px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                                <td> <input type="text" name="ratio" style="text-align:center; background-color:white; border-width:0; width:88px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table align="center" border=1 cellspacing=0 cellpadding=0 width=602 style="font:9pt 돋움;">
+                            <tr align="center" height=40>
+                                <td width=298> 단축이 완료되는 입대일자 </td>
+                                <td width=298> <input type="text" name="reduce_end" style="text-align:center; background-color:white; border-width:0; width:298px; height:38px; font:12pt 돋움; font-weight:bold;"> </td>
+                            </tr>
+                        </table>
+                        <br>
+                        ⦁ 단축 완료 일자는 최종 단축 기간 3개월 (21개월 → 18개월) 기준으로 산출
+                    </td>
+                </tr>
+                <tr height=10%>
+                    <td align="center" valign="bottom"> 6사단 2연대 3대대 11중대 상병 이상훈, 2018-01-30 06:37 작성 </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
