@@ -1,0 +1,3 @@
+/* https://unix.stackexchange.com/questions/105483/compiling-code-from-apue */
+
+cc <sourcefile> -I <apuedir>/include -L <apuedir>/lib -lapue
