@@ -79,7 +79,7 @@ void *__Queue__front(const Queue *q)
 	return __Queue__addr(q, (q->_front + 1) % q->_array_length);
 }
 
-#define 		Queue__back(_q, __type__)				*(__type__ *)__Queue__back(_q))
+#define 		Queue__back(_q, __type__)				*(__type__ *)__Queue__back(_q)
 void *__Queue__back(const Queue *q)
 {
 	return __Queue__addr(q, (q->_back + 1) % q->_array_length);
