@@ -5,3 +5,9 @@
 a.out
 
 .ipynb_checkpoints/
+
+ai/2022-DL_0_to_all/MNIST_data/
+ai/2022-DL_0_to_all/cifar10/
+
+language-study/2018-c-apue/5/201p/dummy
+language-study/2018-c-apue/5/201p/out[0-4]
